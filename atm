@@ -18,6 +18,53 @@ typedef struct Account Account;
 
 Account * head=NULL;//指向头结点的指针
 Account * tail=NULL;//指向尾结点的指针 
+void loadData()
+{
+	FILE* fp=fopen("D:/atm.txt","r"); 
+	if(fp!=NULL)
+	{
+		while(!feof(fp))
+		{
+			//创建结点 
+			Account * newNode=(Account *)malloc(sizeof(Account));
+			
+			//结点初始化 
+			newNode->next=NULL;
+			fscanf(fp,"%s %s\n",newNode->username,newNode->password); 
+			
+			//添加结点到链表
+			if(head==NULL)
+			{
+				head=newNode;
+				tail=newNode;
+			} 
+			else
+			{
+				tail->next=newNode;
+				tail=newNode;
+			}
+		}
+		fclose(fp);
+		printf("加载成功！\n");
+	}
+}
+
+
+void saveData()
+{
+	FILE* fp=fopen("D:/atm.txt","w");
+	if(fp==NULL)
+	{
+		return;
+	}
+	Account * curP=head;
+	while(curP!=NULL)
+	{
+		fprintf(fp,"%s\t%s\n",curP->username,curP->password);
+		curP=curP->next;
+	}
+	fclose(fp);
+}
 
 void signUp()
 {
@@ -161,6 +208,11 @@ int main()
 	showMenu();
 	
 	printLinkedList();
+	loadData(); 
+	
+	printLinkedList();
+	
+	saveData();
 	
 	return 0;	
 }
